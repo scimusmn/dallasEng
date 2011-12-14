@@ -67,6 +67,7 @@ class dallasScroll : public ofScrollBar {
 public:
   void draw(int _x, int _y);
   void changePadding();
+  void startup();
 };
 
 class dallasDrop : public ofDropDown {

@@ -139,13 +139,13 @@ void titleBar::loadFont(string fontName,int size)
   titleFont.loadFont(fontName);
   titleFont.setSize(size);
   titleFont.setMode(OF_FONT_CENTER);
-  titleFont.setMode(OF_FONT_MID);
-  h=titleFont.stringHeight("Kjhg")*2;
+  titleFont.setMode(OF_FONT_TOP);
+  h=titleFont.stringHeight("Kjhg")*3;
 }
 
 void titleBar::draw(string title,int x, int y)
 {
-  double prop=2;
+  double prop=3;
   h=titleFont.stringHeight("Kjhg")*prop;
   w=ofGetWidth();
   
@@ -154,7 +154,7 @@ void titleBar::draw(string title,int x, int y)
   //ofSetShadowDarkness(.4);
   //ofShade(x, y+h, 10, ofGetWidth(), OF_UP);
   ofSetColor(yellow);
-  titleFont.drawString(title, w/2, y+h/2);
+  titleFont.drawString(title, w/2, y+(h-titleFont.stringHeight(title))/2);
   
   ofSetColor(gray);
   ofRect(x, y+h*.85, w, h*.15);
@@ -264,20 +264,6 @@ void dallasScroll::draw(int _x, int _y)
   ofRect((vert)?x+4:x+endPad, (vert)?y+endPad:y+4, (vert)?w-8:tabRange, (!vert)?h-8:tabRange);
   
   ofSetColor(blue.opacity(k.a/255.));
-  /*if(vert) tab.x=x+4, tab.w=w-8;
-  else tab.y=y+4,tab.h=h-8;;
-  ofRect(tab.x, tab.y, tab.w, tab.h);
-  ofNoFill();
-  ofSetColor((blue*.7).opacity(k.a/255.));
-  ofRect(tab.x, tab.y, tab.w, tab.h);
-  ofFill();
-  double space=3;
-  ofSetColor(black.opacity(.25));
-  double lOff=20;
-  for (int i=0; i<((!vert)?(tab.w-lOff)/space:(tab.h-lOff)/space); i++) {
-    if(vert) ofRect(tab.x+4, tab.y+lOff/2+i*space, tab.w-8, 1);
-    else ofRect(tab.x+lOff/2+i*space, tab.y+4, 1, tab.h-8);
-  }*/
   
   if(vert) tab.x=x+4, tab.w=w-8,tab.y=y;
   else tab.y=y+4,tab.h=h-8,tab.x=x;
@@ -300,8 +286,18 @@ void dallasScroll::draw(int _x, int _y)
 
 void dallasScroll::changePadding()
 {
-  tabRange=(vert)?(h-20):(w-20);
-  endPad=(vert)?(h-tabRange)/2:(w-tabRange)/2;
+  float pos=getScrollPercent();
+  endPad=10;
+  tabRange=(vert)?(h-endPad*2):(w-endPad*2);
+  double perc=((viewSize/fullSize)>=1)?1:(viewSize/fullSize);
+	if (!vert) tab.w=perc*(tabRange-2);
+	else tab.h=perc*(tabRange-2);
+  setScrollPosition(pos*(fullSize-viewSize));
+}
+
+void dallasScroll::startup(){
+  endPad=10;
+  tabRange=(vert)?(h-endPad*2):(w-endPad*2);
   double perc=((viewSize/fullSize)>=1)?1:(viewSize/fullSize);
 	if (!vert) tab.w=perc*(tabRange-2);
 	else tab.h=perc*(tabRange-2);
@@ -396,18 +392,30 @@ void dallasDrop::dallasStyle()
 void dallasSlider::draw(int _x, int _y, int _w, int _h)
 {
   x=_x, y=_y;
+  w=_w, h=_h;
   knob.x=x-knob.w/2;
   knob.y=y-(knob.h-h)/2;
-  ofRaised(-.2);
+  
+  ofSetColor(black);
   ofRoundedRect(x, y, w, h, h/4);
-  ofRaised(.2);
-  ofSetShadowDarkness(.2);
-  ofShadowCircle(knob.x+knob.relPos.x+knob.w/2+2, knob.y+knob.h/2+2, knob.w/2,1);
-  ofSetColor(200, 200, 200);
-  ofCircle_Plus(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/2);
-  if(knob.pressed()) ofSetColor(0, 64, 200);
-  else ofSetColor(128,128,128);
-  ofRaised(-.2);
-  ofCircle_Plus(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/3);
+  
+  ofSetColor(yellow);
+  ofNoFill();
+  ofRoundedRect(x, y, w, h, h/4);
+  ofFill();
+  ofSetColor(gray);
+  ofCircle(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/2);
+  if(!knob.pressed()) ofSetColor(white*.4);
+  else ofSetColor(gray);
+  ofCircle(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/3);
+  ofNoFill();
+  ofSetColor(yellow);
+  ofEnableSmoothing();
+  ofSetLineWidth(2);
+  ofCircle(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/2);
+  ofSetLineWidth(1);
+  ofCircle(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/3);
+  ofDisableSmoothing();
+  ofFill();
 }
 
