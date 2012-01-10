@@ -138,7 +138,7 @@ void titleBar::loadFont(string fontName,int size)
 {
   titleFont.loadFont(fontName);
   titleFont.setSize(size);
-  titleFont.setMode(OF_FONT_CENTER);
+  titleFont.setMode(OF_FONT_LEFT);
   titleFont.setMode(OF_FONT_TOP);
   h=titleFont.stringHeight("Kjhg")*3;
 }
@@ -154,7 +154,7 @@ void titleBar::draw(string title,int x, int y)
   //ofSetShadowDarkness(.4);
   //ofShade(x, y+h, 10, ofGetWidth(), OF_UP);
   ofSetColor(yellow);
-  titleFont.drawString(title, w/2, y+(h-titleFont.stringHeight(title))/2);
+  titleFont.drawString(title, x+40, y+(h-titleFont.stringHeight(title))/2);
   
   ofSetColor(gray);
   ofRect(x, y+h*.85, w, h*.15);
@@ -189,8 +189,10 @@ void drawHatching(double x, double y, double w, double h, double hatchSpace, dou
     {
       ofVertex(l1.x, l1.y);
       ofVertex(r1.x, r1.y);
+      if(r1.y!=r2.y&&r1.x!=r2.x) ofVertex(r1.x, r2.y);
       ofVertex(r2.x, r2.y);
       ofVertex(l2.x, l2.y);
+      if(l1.x!=l2.x&&l1.y!=l2.y) ofVertex(l2.x, l1.y);
     }
     if(bCloseShape) ofEndShape();
   }
@@ -219,10 +221,20 @@ void trimmedRect(double x, double y, double w, double h,double trim)
   ofEndShape();
 }
 
+void drawStyledBox(int x, int y, int w, int h)
+{
+  ofSetColor(gray);
+  ofRectangle back(x,y,w,h);
+  ofRect(back);
+  ofSetColor(black);
+  drawHatching(back.x,back.y,back.width, back.height,15,1);
+  drawBorder(back);
+}
+
 void dallasButton::draw(int _x, int _y)
 {
   x=_x, y=_y;
-  w=1.3*arial.stringWidth(title);
+  w=max(1.3*arial.stringWidth(title),w);
 	h=arial.stringHeight("Kjh")*1.2;
 	if(bPressed) ofSetColor(white-.2*255);
   else ofSetColor(white);
@@ -315,7 +327,7 @@ void dallasDrop::draw(int _x, int _y){
   h=arial.stringHeight("Kjhg")*1.3;
   float strTop=0;//(h-arial.stringHeight("Kjhg"))/2;
   
-	int textX=x+w/2;
+	int textX=x+(w-h/4-6)/2;
   int textY=y+h/2;
   ofSetLineWidth(1);
 	if(!open){

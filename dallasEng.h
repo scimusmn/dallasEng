@@ -83,6 +83,8 @@ public:
   void draw(int _x, int _y, int _w, int _h);
 };
 
+void drawStyledBox(int x, int y, int w, int h);
+
 void trimmedRect(double x, double y, double w, double h,double trim=1/3.);
 
 void drawBorder(ofRectangle & box);
