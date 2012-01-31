@@ -143,8 +143,9 @@ void titleBar::loadFont(string fontName,int size)
   h=titleFont.stringHeight("Kjhg")*3;
 }
 
-void titleBar::draw(string title,int x, int y)
+void titleBar::draw(string title,int _x, int _y)
 {
+  x=_x, y=_y;
   double prop=3;
   h=titleFont.stringHeight("Kjhg")*prop;
   w=ofGetWidth();
@@ -209,7 +210,8 @@ void drawBorder(ofRectangle & box){
 
 void trimmedRect(double x, double y, double w, double h,double trim)
 {
-  int unit=h*trim;
+  float unit=trim;
+  if(unit<1.) unit*=h;
   ofBeginShape();{
     ofVertex(x+unit, y);
     ofVertex(x+w, y);
@@ -236,12 +238,20 @@ void dallasButton::draw(int _x, int _y)
   x=_x, y=_y;
   w=max(1.3*arial.stringWidth(title),w);
 	h=arial.stringHeight("Kjh")*1.2;
-	if(bPressed) ofSetColor(white-.2*255);
-  else ofSetColor(white);
+	//if(bPressed) ofSetColor(white-.2*255);
+  ofSetColor(0xbababa);
   trimmedRect(x, y, w, h);
-  ofSetColor(black);
+  if(bPressed){
+    ofSetColor(blue);
+    trimmedRect(x+3, y+3, w-6, h-6, h/3-2);
+  }
   ofNoFill();
+  ofSetLineWidth(2);
+  ofSetColor(white);
+  trimmedRect(x+3, y+3, w-6, h-6, h/3-2);
+  ofSetColor(black);
   trimmedRect(x, y, w, h);
+  ofSetLineWidth(1);
   ofFill();
   
   
