@@ -8,6 +8,9 @@
  */
 
 #include "dallasEng.h"
+#ifdef ANIMATION_LAB
+#include "../AnimationLab/src/robotConfig.h";
+#endif
 
 ofColor white(255,255,255);
 ofColor black(0,0,0);
@@ -103,6 +106,88 @@ void objHolder::setDrawing(bool drw)
 
 //_-_-_-_-_//_-_-_-_-_//_-_-_-_-_//_-_-_-_-_//_-_-_-_-_
 //_-_-_-_-_//_-_-_-_-_   toolBar //_-_-_-_-_//_-_-_-_-_
+
+static ofFont lbl;
+static ofFont hdr;
+static ofFontMode lVert;
+static ofFontMode lHor;
+static int lSize;
+
+static ofFontMode hVert;
+static ofFontMode hHor;
+static int hSize;
+
+ofFont & label(){
+	return lbl;
+}
+
+void label(string t, int x, int y)
+{
+	lbl.drawString(t,x,y);
+}
+
+void pushLabelStyle()
+{
+	lVert=lbl.getVertMode();
+	lHor=lbl.getHorMode();
+	lSize=lbl.getSize();
+}
+
+void pushLabelStyle(ofFontMode mode)
+{
+	pushLabelStyle();
+	lbl.setMode(mode);
+}
+
+void pushLabelStyle(int size, ofFontMode mode)
+{
+	pushLabelStyle();
+	lbl.setMode(mode);
+	lbl.setSize(size);
+}
+
+void popLabelStyle()
+{
+	lbl.setMode(lVert);
+	lbl.setMode(lHor);
+	lbl.setSize(lSize);
+}
+
+ofFont & header(){
+	return hdr;
+}
+
+void pushHeaderStyle()
+{
+	hVert=hdr.getVertMode();
+	hHor=hdr.getHorMode();
+	hSize=hdr.getSize();
+}
+
+void pushHeaderStyle(ofFontMode mode)
+{
+	pushHeaderStyle();
+	hdr.setMode(mode);
+}
+
+void pushHeaderStyle(int size, ofFontMode mode)
+{
+	pushHeaderStyle();
+	hdr.setMode(mode);
+	hdr.setSize(size);
+}
+
+void popHeaderStyle()
+{
+	hdr.setMode(hVert);
+	hdr.setMode(hHor);
+	hdr.setSize(hSize);
+}
+
+void header(string t, int x, int y)
+{
+	hdr.drawString(t,x,y);
+}
 
 void toolBar::setup(ofDirection bar_direction)
 {
@@ -397,6 +482,7 @@ void dallasDrop::draw(int _x, int _y){
 dallasDrop::dallasDrop(ofTag & tag):ofDropDown(tag)
 {
   //dallasStyle();
+
 }
 
 dallasDrop::dallasDrop():ofDropDown()
@@ -439,5 +525,12 @@ void dallasSlider::draw(int _x, int _y, int _w, int _h)
   ofCircle(knob.x+knob.relPos.x+knob.w/2, knob.y+knob.h/2, knob.w/3);
   ofDisableSmoothing();
   ofFill();
+}
+
+bool dallasSlider::pressed()
+{
+	bool ret=false;
+	ret=bPressed||knob.pressed();
+	return ret;
 }
 

@@ -16,6 +16,20 @@
 
 void drawHatching(double x, double y, double w, double h, double hatchSpace, double hatchWidth);
 
+ofFont & label();
+ofFont & header();
+void label(string t, int x, int y);
+void header(string t, int x, int y);
+void pushLabelStyle();
+void pushLabelStyle(ofFontMode mode);
+void pushLabelStyle(int size, ofFontMode mode);
+void popLabelStyle();
+
+void pushHeaderStyle();
+void pushHeaderStyle(ofFontMode mode);
+void pushHeaderStyle(int size, ofFontMode mode);
+void popHeaderStyle();
+
 class titleBar {
 protected:
   ofFont titleFont;
@@ -81,6 +95,7 @@ public:
 class dallasSlider : public ofSlider {
 public:
   void draw(int _x, int _y, int _w, int _h);
+  bool pressed();
 };
 
 void drawStyledBox(int x, int y, int w, int h);
