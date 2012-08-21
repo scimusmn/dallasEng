@@ -12,7 +12,11 @@
 #include "../AnimationLab/src/robotConfig.h";
 #endif
 
+#ifdef TARGET_OSX
+#include "../Animation-Lab/src/robotConfig.h";
+#else
 #include "../AnimationLab/src/robotConfig.h";
+#endif
 
 ofColor white(255,255,255);
 ofColor black(0,0,0);
