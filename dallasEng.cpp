@@ -513,7 +513,7 @@ dallasDrop::dallasDrop():ofDropDown()
 
 void dallasDrop::dallasStyle()
 {
-  arial.loadFont("fonts/HelveticaCond.otf");
+  arial.loadFont("fonts/HelveticaBold.otf");
   arial.setMode(OF_FONT_TOP);
   setTextSize(22);
 }
