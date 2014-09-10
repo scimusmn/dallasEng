@@ -9,13 +9,13 @@
 
 #include "dallasEng.h"
 #ifdef ANIMATION_LAB
-#include "../AnimationLab/src/robotConfig.h";
+#include "../Animation-Lab/src/robotConfig.h";
 #endif
 
 #ifdef TARGET_OSX
-#include "../Animation-Lab/src/robotConfig.h";
+#include "../Animation-Lab/src/robotConfig.h"
 #else
-#include "../AnimationLab/src/robotConfig.h";
+#include "../Animation-Lab/src/robotConfig.h";
 #endif
 
 ofColor white(255,255,255);
@@ -241,17 +241,18 @@ void titleBar::draw(string title,int _x, int _y)
   h=titleFont.stringHeight("Kjhg")*prop;
   w=ofGetWidth();
   
-  ofSetColor(black);
+    drawStyledBox(x, y, ofGetWidth(), h);
+  ofSetColor(black.opacity(150));
   ofRect(x, y, ofGetWidth(), h);
   //ofSetShadowDarkness(.4);
   //ofShade(x, y+h, 10, ofGetWidth(), OF_UP);
-  ofSetColor(yellow);
+  ofSetColor(white);
   titleFont.drawString(title, x+40, y+(h-titleFont.stringHeight(title))/2);
   
   ofSetColor(gray);
   ofRect(x, y+h*.85, w, h*.15);
   
-  ofSetColor(yellow);
+  ofSetColor(white);
   ofRect(x, y+h*.85, w, 1);
   ofRect(x, y+h, w, 1);
   //ofSetShadowDarkness(.6);
@@ -335,10 +336,10 @@ void trimmedRect(double x, double y, double w, double h,double trim)
 
 void drawStyledBox(int x, int y, int w, int h)
 {
-  ofSetColor(gray);
+  ofSetColor(cfg().backgroundColor);
   ofRectangle back(x,y,w,h);
-  ofRect(back);
-  ofSetColor(black);
+  ofRect(back.x,back.y,back.width,back.height);
+  ofSetColor(cfg().lineColor.opacity(32));
   drawHatching(back.x,back.y,back.width, back.height,15,1);
   drawBorder(back);
 }
@@ -349,7 +350,7 @@ void dallasButton::draw(int _x, int _y)
   w=max(1.3*arial.stringWidth(title),w);
 	h=arial.stringHeight("Kjh")*1.2;
 	//if(bPressed) ofSetColor(white-.2*255);
-  ofSetColor(0xbababa);
+  ofSetHexColor(0xbababa);
   trimmedRect(x, y, w, h);
   if(bPressed){
     ofSetColor(blue);
@@ -390,22 +391,22 @@ void dallasScroll::draw(int _x, int _y)
 {
   ofColor k=ofGetStyle().color;
 	x=_x, y=_y;
-	ofSetColor(gray.opacity(k.a/255.));
+	ofSetColor(gray.opacity(k.a));
 	ofRect(x, y, (vert)?w+2:w, (vert)?h:h+2);
-	ofSetColor(black.opacity(k.a/255.));
+	ofSetColor(black.opacity(k.a));
   ofRect((vert)?x+4:x+endPad, (vert)?y+endPad:y+4, (vert)?w-8:tabRange, (!vert)?h-8:tabRange);
   
-  ofSetColor(blue.opacity(k.a/255.));
+  ofSetColor(blue.opacity(k.a));
   
   if(vert) tab.x=x+4, tab.w=w-8,tab.y=y;
   else tab.y=y+4,tab.h=h-8,tab.x=x;
   ofRect(tab.x+tab.relPos.x, tab.y+tab.relPos.y, tab.w, tab.h);
   ofNoFill();
-  ofSetColor((blue*.6).opacity(k.a/255.));
+  ofSetColor((blue*.6).opacity(k.a));
   ofRect(tab.x+tab.relPos.x, tab.y+tab.relPos.y, tab.w, tab.h);
   ofFill();
   double space=3;
-  ofSetColor(black.opacity(.25));
+  ofSetColor(black.opacity(64));
   double lOff=20;
   for (int i=0; i<((!vert)?(tab.w-lOff)/space:(tab.h-lOff)/space); i++) {
     if(vert) ofRect(tab.x+tab.relPos.x+4, tab.y+tab.relPos.y+lOff/2+i*space, tab.w-8, 1);
@@ -440,7 +441,7 @@ void dallasScroll::startup(){
 void dallasDrop::draw(int _x, int _y){
   x=_x,y=_y;
 	string vars;
-	if(values.size()) vars=values[curPos];
+	if(strings.size()) vars=strings[curPos];
   arial.setMode(OF_FONT_MID);
   arial.setMode(OF_FONT_CENTER);
   double prop=1.3;
@@ -475,9 +476,9 @@ void dallasDrop::draw(int _x, int _y){
 	}
 	else{
 		ofSetColor(white*.95);
-		int yDisp=(curPos>=nDisp&&curPos<nDisp+values.size()%10)?curPos%10:0;
+		int yDisp=(curPos>=nDisp&&curPos<nDisp+strings.size()%10)?curPos%10:0;
 		if(y-5<h*curPos||!bAutoAdj) yDisp=0;
-		steps=values.size();
+		steps=strings.size();
 		if(bOver=(steps>11)){
 			steps=min(steps-nDisp, 10);
 		}
@@ -488,7 +489,7 @@ void dallasDrop::draw(int _x, int _y){
     ofFill();
 		glColor3f(0,0,0);
 		for (int i=0; i<steps; i++) {
-			arial.drawString(values[i+nDisp],textX,textY+(i-yDisp)*h);
+			arial.drawString(strings[i+nDisp],textX,textY+(i-yDisp)*h);
 		}
 		if(bOver){
 			ofSetLineWidth(1);
@@ -496,7 +497,7 @@ void dallasDrop::draw(int _x, int _y){
 			if(nDisp>0) ofSetColor(0, 0, 0);
 			else ofSetColor(128,128,128);
 			arial.drawString("previous page",textX,textY+(steps-yDisp)*h);
-			if(nDisp<values.size()-10) ofSetColor(0, 0, 0);
+			if(nDisp<strings.size()-10) ofSetColor(0, 0, 0);
 			else ofSetColor(128,128,128);
 			arial.drawString("next page",textX,textY+(steps+1-yDisp)*h);
 		}
